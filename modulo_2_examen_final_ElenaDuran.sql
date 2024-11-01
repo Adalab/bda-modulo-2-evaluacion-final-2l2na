@@ -1,12 +1,15 @@
--- 1. Selecciona todos los nombres de las películas sin que aparezcan duplicados
+-- ==>>  1. Selecciona todos los nombres de las películas sin que aparezcan duplicados
+-- ==============================================================================================
 
+-- ###### RESULTADO ########
 	-- No hacía falta DISTINCT, porque ya son todos diferentes....
 SELECT DISTINCT title
 	FROM film;
     
--- 2. Muestra los nombres de todas las películas que tengan una clasificación de "PG-13".
+-- ==>>  2. Muestra los nombres de todas las películas que tengan una clasificación de "PG-13".
+-- ==============================================================================================
 
--- ****comprobación****
+-- ****comprobaciones****
 SELECT title, rating
 	FROM film
     WHERE rating = 'PG-13';
@@ -17,15 +20,19 @@ SELECT title
 	FROM film
     WHERE rating = 'PG-13';
 
--- 3. Encuentra el título y la descripción de todas las películas que contengan la palabra "amazing" en su descripción.
+-- ==>>  3. Encuentra el título y la descripción de todas las películas que contengan 
+-- la palabra "amazing" en su descripción.
+-- ==============================================================================================
 	
+    -- ###### RESULTADO ########
    SELECT title, description
 	FROM film
     WHERE description LIKE '%mazing%';
     
--- 4. Encuentra el título de todas las películas que tengan una duración mayor a 120 minutos.
+-- ==>>  4. Encuentra el título de todas las películas que tengan una duración mayor a 120 minutos.
+-- ==============================================================================================
 
--- ****comprobación****
+-- ****comprobaciones****
 SELECT title, length
 	FROM film
     WHERE length > 120;
@@ -36,24 +43,28 @@ SELECT title
 	FROM film
     WHERE length > 120;
     
--- 5. Recupera los nombres de todos los actores.
+-- ==>>  5. Recupera los nombres de todos los actores.
+-- ==============================================================================================
 
+-- ###### RESULTADO ########
 	-- Considero nombres y apellidos
 SELECT CONCAT(first_name,' ',last_name) AS nombres_de_actores
 	FROM actor;
 
--- 6. Encuentra el nombre y apellido de los actores que tengan "Gibson" en su apellido.
+-- ==>>  6. Encuentra el nombre y apellido de los actores que tengan "Gibson" en su apellido.
+-- ==============================================================================================
 
+-- ###### RESULTADO ########
 SELECT first_name, last_name
 	FROM actor
     WHERE last_name LIKE 'Gibson';
 			-- Comprobado: solo hay 1
 
--- 7. Encuentra los nombres de los actores que tengan un actor_id entre 10 y 20.
+-- ==>>  7. Encuentra los nombres de los actores que tengan un actor_id entre 10 y 20.
+-- ==============================================================================================
 
+-- ****comprobaciones****
 -- Considero nombres y apellidos ---- Que lo he copiado del 5, vamos
-
--- ****comprobación****
 		-- Comprobando dónde poner el LIMIT Y EL OFFSET para que salgan del 10 al 20
 SELECT CONCAT(first_name,' ',last_name) AS nombres_de_actores, actor_id
 	FROM actor
@@ -69,9 +80,11 @@ SELECT CONCAT(first_name,' ',last_name) AS nombres_de_actores
     LIMIT 11
     OFFSET 9;
 
--- 8. Encuentra el título de las películas en la tabla film que no sean ni "R" ni "PG-13" en cuanto a su clasificación.
+-- ==>>  8. Encuentra el título de las películas en la tabla film 
+-- que no sean ni "R" ni "PG-13" en cuanto a su clasificación.
+-- ==============================================================================================
 
--- ****comprobación****
+-- ****comprobaciones****
 SELECT title, rating
 	FROM film
     WHERE rating NOT IN ('R', 'PG-13');
@@ -82,19 +95,23 @@ SELECT title
 	FROM film
     WHERE rating NOT IN ('R', 'PG-13');
 
--- 9. Encuentra la cantidad total de películas en cada clasificación de la tabla film 
-/*y muestra la clasificación junto con el recuento*/
+-- ==>>  9. Encuentra la cantidad total de películas en cada clasificación de la tabla film 
+-- y muestra la clasificación junto con el recuento
+-- ==============================================================================================
 
+-- ###### RESULTADO ########
 SELECT rating AS clasificacion, COUNT(title) AS recuento
 	FROM film
     GROUP BY rating;
 
--- 10. Encuentra la cantidad total de películas alquiladas por cada cliente y muestra el ID del cliente, 
-/*su nombre y apellido junto con la cantidad de películas alquiladas.*/
+-- ==>>  10. Encuentra la cantidad total de películas alquiladas por cada cliente y muestra el ID del cliente, 
+-- su nombre y apellido junto con la cantidad de películas alquiladas.
+-- ==============================================================================================
 
 -- Relaciones: 	rental   => (customer_id) => customer 
 -- 				recuento películas === nombre de clientes
 
+-- ****comprobaciones****
 	-- Resolvemos la cantidad de películas alquiladas por cada id de cliente
 SELECT customer_id, COUNT(rental_id)
 	FROM rental
@@ -108,8 +125,9 @@ SELECT r.customer_id, CONCAT(c.first_name,' ',c.last_name) AS nombre_cliente ,CO
 		ON r.customer_id = c.customer_id
     GROUP BY customer_id; -- Lo agrupamos para que cuente los id de películas
 
--- 11. Encuentra la cantidad total de películas alquiladas por categoría 
-/*y muestra el nombre de la categoría junto con el recuento de alquileres.*/
+-- ==>>  11. Encuentra la cantidad total de películas alquiladas por categoría 
+-- y muestra el nombre de la categoría junto con el recuento de alquileres.
+-- ==============================================================================================
 
 -- Relaciones:
 -- 	rental ## recuento películas alquiladas## => (inventory_id) => inventory
@@ -117,7 +135,8 @@ SELECT r.customer_id, CONCAT(c.first_name,' ',c.last_name) AS nombre_cliente ,CO
 -- 	film => (film_id) => film_category ¡¡¡ojo!!! aunque sea la misma id, inventory no está relacionada con film_category
 -- 	film_category => (category_id) => category ## nombre categoría##
 
--- Hacemos todas las relaciones
+-- ****comprobaciones****
+-- Hacemos todas las relaciones - Unimos las tablas
 SELECT r.rental_id, i.inventory_id, i.film_id, f.film_id, fc.category_id, c.name
 	FROM rental AS r
     INNER JOIN inventory AS i
@@ -143,13 +162,15 @@ SELECT c.name AS categoria, COUNT(r.rental_id) AS num_peliculas_alquiladas
                 ON fc.category_id = c.category_id
 GROUP BY categoria;
 
--- 12. Encuentra el promedio de duración de las películas para cada clasificación 
+-- ==>>  12. Encuentra el promedio de duración de las películas para cada clasificación
  -- de la tabla film y muestra la clasificación junto con el promedio de duración
+ -- ==============================================================================================
 
 -- Relaciones : film ##length## => (film_id) => film_category
 -- 				film_category => (category_id) => category ##name##
 
--- Hacemos las relaciones
+-- ****comprobaciones****
+-- Hacemos las relaciones. Unimos las tablas
 SELECT f.length, fc.film_id, fc.category_id, c.name
 	FROM film AS f
     INNER JOIN 	film_category AS fc
@@ -169,12 +190,14 @@ SELECT c.name AS categoría, AVG(f.length) AS duracion_media_peliculas
 			ON fc.category_id = c.category_id
 GROUP BY c.category_id;
         
--- 13. Encuentra el nombre y apellido de los actores que aparecen en la película con title "Indian Love".
+-- ==>>  13. Encuentra el nombre y apellido de los actores que aparecen en la película con title "Indian Love".
+-- ==============================================================================================
 
 -- Relaciones:	film ## title = Indian Love## => (film_id) => film_actor
 -- 	 			film_actor => (actor_id) => actor ## fist_name, last_name
 
--- Relacionamos las tablas
+-- ****comprobaciones****
+-- Relacionamos las tablas. Las unimos
 SELECT f.title, f.film_id, fa.actor_id, a.first_name, a.last_name
 	FROM film AS f
     INNER JOIN film_actor AS fa
@@ -192,14 +215,18 @@ SELECT CONCAT(a.first_name,' ', a.last_name) AS actores_Indian_Love
 			ON fa.actor_id = a.actor_id
             WHERE f.title LIKE 'Indian Love';
 
--- 14. Muestra el título de todas las películas que contengan la palabra "dog" o "cat" en su descripción.
+-- ==>>  14. Muestra el título de todas las películas que contengan la palabra "dog" o "cat" en su descripción.
+-- ==============================================================================================
 
+-- ###### RESULTADO ########
 SELECT title, description
 	FROM film
     WHERE description LIKE '%dog%' OR description LIKE '%cat%';
 
--- 15. Hay algún actor o actriz que no apareca en ninguna película en la tabla film_actor.
+-- ==>>  15. Hay algún actor o actriz que no apareca en ninguna película en la tabla film_actor.
+-- ==============================================================================================
 
+-- ****comprobaciones****
 -- Vemos las películas que tienen asociadas los actores 
 SELECT CONCAT(a.first_name,' ', a.last_name) AS actor, COUNT(fa.film_id) AS conteo_peliculas
 	FROM actor AS a
@@ -224,26 +251,29 @@ SELECT CONCAT(a.first_name,' ', a.last_name) AS actor
 GROUP BY actor  
 HAVING COUNT(fa.film_id) = 0;
 
--- 16. Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010
+-- ==>>  16. Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010
+-- ==============================================================================================
 
+-- ###### RESULTADO ########
 SELECT title, release_year
 	FROM film
     WHERE release_year >= 2005 AND release_year <=2010;
 -- Ha sido una tonteria porque solo hay películas del 2006
 
--- 17. Encuentra el título de todas las películas que son de la misma categoría que "Family"
+-- ==>>  17. Encuentra el título de todas las películas que son de la misma categoría que "Family"
+-- ==============================================================================================
 
 -- Relaciones : film ##ttitles## => (film_id) => film_category
 -- 				film_category => (category_id) => category ##name##
 
+-- ****comprobaciones****
 -- Relacionamos todas las tablas
 SELECT f.title, f.film_id, fc.category_id, c.name
 	FROM film AS f
     INNER JOIN film_category AS fc
 		ON f.film_id = fc.film_id
         INNER JOIN category AS c
-			ON fc.category_id = c.category_id;
-            
+			ON fc.category_id = c.category_id;            
 
 -- Buscamos solo la categoría de 'Family'
 SELECT f.title, f.film_id, fc.category_id, c.name
@@ -296,8 +326,10 @@ SELECT f.title
 										ON fc1.category_id = c1.category_id
 							WHERE f1.title = 'Family'); 
                             
--- 18. Muestra el nombre y apellido de los actores que aparecen en más de 10 películas.
+-- ==>>  18. Muestra el nombre y apellido de los actores que aparecen en más de 10 películas.
+-- ==============================================================================================
 
+-- ****comprobaciones****
 -- Vemos las películas que tiene cada actor
 SELECT CONCAT(a.first_name,' ',a.last_name) AS actores_con_mas_10_peliculas, COUNT(fa.film_id) AS conteo_peliculas
 	FROM actor AS a
@@ -316,18 +348,23 @@ SELECT CONCAT(a.first_name,' ',a.last_name) AS actores_con_mas_10_peliculas
 GROUP BY a.actor_id
 HAVING COUNT(fa.film_id)>10;
 
--- 19. Encuentra el título de todas las películas que son "R" y tienen una duración mayor a 2 horas en la tabla film.
+-- ==>>  19. Encuentra el título de todas las películas que son "R" 
+-- y tienen una duración mayor a 2 horas en la tabla film.
+-- ==============================================================================================
 
+-- ###### RESULTADO ######## 
 SELECT title, rating, length
 	FROM film
     WHERE rating LIKE 'R' AND length >120;
     
--- 20. Encuentra las categorías de películas que tienen un promedio de duración superior a 120 minutos 
+-- ==>>  20. Encuentra las categorías de películas que tienen un promedio de duración superior a 120 minutos 
 -- y muestra el nombre de la categoría junto con el promedio de duración.
+-- ==============================================================================================
 
 -- Relaciones:	category ## name ## => (category_id) => film_category
 -- 				film_category => (film_id) => film ## lengt>120 ##
 
+-- ****comprobaciones****
 -- Unimos las tablas 
 SELECT c.name, c.category_id, fc.film_id, f.length
 	FROM category AS c
@@ -347,9 +384,11 @@ SELECT c.name AS categoria , AVG(f.length) AS promedio_duracion
 GROUP BY categoria
 HAVING promedio_duracion>120;
 
--- 21. Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor junto con la
+-- ==>>  21. Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor junto con la
 -- cantidad de películas en las que han actuado.
+-- ==============================================================================================
 
+-- ****comprobaciones****
 -- Unimos las tablas para comprobar
 SELECT CONCAT(a.first_name,' ',a.last_name) AS nombre_actor, film_id
 	FROM actor AS a
@@ -366,12 +405,14 @@ GROUP BY nombre_actor
 -- 	Aquí ya he comprobado que no hay ningún actor que tenga menos de 5 películas. El que menos, tiene 14
 HAVING COUNT(film_id)>5;
 
--- 22. Encuentra el título de todas las películas que fueron alquiladas por más de 5 días. Utiliza una subconsulta para
+-- ==>>  22. Encuentra el título de todas las películas que fueron alquiladas por más de 5 días. Utiliza una subconsulta para
 -- encontrar los rental_ids con una duración superior a 5 días y luego selecciona las películas correspondientes.
+-- ==============================================================================================
 
 -- Relaciones:	rental ## return_date - rental_date > 5 ## => (inventory_id) => inventory
 -- 				inventory => (film_id) => film ## title ##
 
+-- ****comprobaciones****
 -- Hacemos la consulta que nos proporciona los id_inventory alquilados por mas de 5 días
 SELECT r.rental_id, i.inventory_id, DATEDIFF(r.return_date, r.rental_date) AS dias_alquilada 
 	-- Le he preguntado a la Chati como se hace diferencia entre fechas pq con '-' no funcionaba
@@ -400,18 +441,19 @@ SELECT f.title
 										WHERE DATEDIFF(r.return_date, r.rental_date) >5)
 GROUP BY f.film_id;
 
--- 23. Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror".
+-- ==>>  23. Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror".
 -- Utiliza una subconsulta para encontrar los actores que han actuado en películas de la categoría "Horror" y luego
 -- exclúyelos de la lista de actores.
+-- ==============================================================================================
 
 -- Relaciones :	actor # nombre actor # => (actor_id) => film_actor
 -- 				film_actor => (film_id) => film # contar películas #
 -- 				film =>	(film_id) => film_category
 -- 				film_category => (category_id) => category ## nombre categoria ##
-		
+
+-- ****comprobaciones****		
 -- Relacionamos las tablas
--- Buscamos actores que han trabajado en películas de Horror
-        
+-- Buscamos actores que han trabajado en películas de Horror        
 SELECT a.actor_id AS actor, COUNT(f.title) as num_peliculas_Horror
 	FROM actor AS a
 		INNER JOIN film_actor AS fa
@@ -445,12 +487,14 @@ SELECT CONCAT(a1.first_name,' ', a1.last_name) AS actor
 								GROUP BY a.actor_id
 								HAVING COUNT(f.title) >= 1);
 
--- 24. BONUS: Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la
+-- ==>>  24. BONUS: Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la
 -- tabla film.
+-- ==============================================================================================
 
 -- Relaciones:	film ## title, length ## => (film_id) => film_category
 -- 				film_category => (category_id) => category ## nombre ##
 
+-- ****comprobaciones****
 -- Buscamos todas las películas que tienen una duración > 180 min
 
 SELECT title, length
@@ -475,43 +519,114 @@ SELECT title, length
 											ON c.category_id = fc.category_id
 											WHERE c.name = 'comedy');
 
--- 25. BONUS: Encuentra todos los actores que han actuado juntos en al menos una película. La consulta debe
+-- ==>>  25. BONUS: Encuentra todos los actores que han actuado juntos en al menos una película. La consulta debe
 -- mostrar el nombre y apellido de los actores y el número de películas en las que han actuado juntos.
+-- ==============================================================================================
 
+-- ****comprobaciones****
+-- Vamos despacio, que esto tiene miga: Como decía Jack, vayamos por partes
 -- Consultamos todos los actores y las pelicualas que han hecho
 
 SELECT actor_id, film_id
-	FROM film_actor;
-   
+	FROM film_actor;   
     
--- Hacemos un Self join para ver qué actores han trabajado con qué actores
-SELECT fa1.actor_id, fa1.film_id, fa2.actor_id
+-- Hacemos un Self join para ver qué actores han trabajado con qué actores y en qué películas
+SELECT  fa1.film_id AS pelicula, fa1.actor_id AS actor1, fa2.actor_id AS actor2, fa1.actor_id AS actor1
 	FROM film_actor AS fa1
 	INNER JOIN film_actor AS fa2
-    ON fa1.film_id = fa2.film_id
+    ON fa1.film_id = fa2.film_id;
+    
+
+-- Eso quiere decir que todos esos actores han coincidido alguna vez. 
+-- Ya tengo las parejas de actores. Ahora tengo que limpiar los repetidos que están en el orden inverso (reflejo)
+-- actor1 (A),actor2(B) y borrar actor2(B),actor1(A) porque son iguales
+
+WITH parejas AS (SELECT fa1.film_id AS pelicula, fa1.actor_id AS actor1, fa2.actor_id AS actor2
+					FROM film_actor AS fa1
+					INNER JOIN film_actor AS fa2
+						ON fa1.film_id = fa2.film_id)
+SELECT CONCAT(actor1,'-', actor2) AS parejas_actores, pelicula
+	FROM parejas
+    WHERE actor1 NOT LIKE actor2; -- Con esto nos quitamos los duplicados
+
+-- Voy a hacer la misma consulta pero que me de los resultados de las parejas al revés
+WITH parejas AS (SELECT fa1.film_id AS pelicula, fa1.actor_id AS actor1, fa2.actor_id AS actor2
+					FROM film_actor AS fa1
+					INNER JOIN film_actor AS fa2
+						ON fa1.film_id = fa2.film_id)
+SELECT CONCAT(actor2,'-', actor1) AS parejas_actores, pelicula
+	FROM parejas
+    WHERE actor1 NOT LIKE actor2;
+
+-- Si hago un UNION me limpiará los duplicados??
+
+WITH parejas AS (SELECT fa1.film_id AS pelicula, fa1.actor_id AS actor1, fa2.actor_id AS actor2
+					FROM film_actor AS fa1
+					INNER JOIN film_actor AS fa2
+						ON fa1.film_id = fa2.film_id
+						WHERE fa1.actor_id NOT LIKE fa2.actor_id) -- Con esto nos quitamos los duplicados)
+						-- Poner esto aquí me lo ha chivao la chati, que yo no había caído
+SELECT CONCAT(actor2,'-', actor1) AS parejas_actores, pelicula
+	FROM parejas
+    
+UNION  
+
+SELECT CONCAT(actor1,'-', actor2) AS parejas_actores_espejo, pelicula
+	FROM parejas;
+-- 				-----No sirve, porque la otra consulta tendría los mismos valores 
+
+-- Sacaré el número de películas, a ver si se me ocurre algo
+
+WITH parejas AS (SELECT fa1.film_id AS pelicula, fa1.actor_id AS actor1, fa2.actor_id AS actor2
+					FROM film_actor AS fa1
+					INNER JOIN film_actor AS fa2
+						ON fa1.film_id = fa2.film_id
+						WHERE fa1.actor_id NOT LIKE fa2.actor_id) -- Con esto nos quitamos los duplicados)
+						-- Poner esto aquí me lo ha chivao la chati, que yo no había caído
+SELECT actor2, actor1, COUNT(pelicula) AS peliculas_juntos
+	FROM parejas
+    GROUP BY actor2, actor1;
+
+-- No se me ocurre nada, así que le voy a poner nombres y apellidos, 
+-- pero lo de los duplicados no se solucionarlo
+    
+SELECT  CONCAT(a1.first_name,'-',a1.last_name)AS actor1, 
+		CONCAT(a2.first_name,'-', a2.last_name) AS actor2,
+        fa1.film_id AS pelicula_coincidente
+	FROM film_actor AS fa1
+    INNER JOIN actor AS a1
+		ON fa1.actor_id = a1.actor_id 
+		INNER JOIN film_actor AS fa2
+			ON fa1.film_id = fa2.film_id   
+			INNER JOIN actor AS a2
+			ON fa2.actor_id = a2.actor_id 
+WHERE fa1.actor_id NOT LIKE fa2.actor_id;
+
+-- ###### RESULTADO ########  
+-- Le pongo esta CTE a la consulta anterior:
+WITH parejas AS (SELECT CONCAT(a1.first_name,'-',a1.last_name)AS actor1, 
+						CONCAT(a2.first_name,'-', a2.last_name) AS actor2, 
+						fa1.film_id AS pelicula_coincidente	
+						FROM film_actor AS fa1
+						INNER JOIN actor AS a1
+							ON fa1.actor_id = a1.actor_id 
+							INNER JOIN film_actor AS fa2
+								ON fa1.film_id = fa2.film_id   
+								INNER JOIN actor AS a2
+								ON fa2.actor_id = a2.actor_id 
+					WHERE fa1.actor_id NOT LIKE fa2.actor_id)					
+SELECT actor1, actor2, COUNT(pelicula_coincidente) AS num_peliculas_juntos
+	FROM parejas
+    GROUP BY actor2, actor1;
+--  Esta solución tiene repetidas las parejas de actores (A-B) con su reflejo (B-A). No se cómo eliminar una de ellas
+-- Pero el dato de películas juntos es correcto
+
 
 				
 
+ 
 
 
-
-
-
-
-        
-	
-
-
-
-                
-
-
-
-
-
-
-	
-        
         
 
 
