@@ -12,7 +12,7 @@ Los ejercicios están en orden, enumerados y con sus correspondientes enunciados
 
 La resolución de los ejercicios pueden tener alguno de llos siguientes apartados:
 
-	-- Relaciones : Lo uso en las subconsultas para trasladar la inspección del diagrama de tablas y hacer un mapa de cómo se relacionan las tablas que necesito para llegar a los datos que busco y cuál es el punto de unión entre estas tablas
+	-- Relaciones : Lo uso en las subconsultas para trasladar la inspección del diagrama de la base de datos y hacer un mapa de cómo se relacionan las tablas que necesito para llegar a los datos que busco y cuál es el punto de unión entre estas tablas
 
 	-- ****comprobaciónes**** : Son las queries intermedias que he necesitado para la resolución del ejercicio
     
@@ -22,5 +22,5 @@ Dentro de estos apartados puedes encontrar interpretaciones, consideraciones y c
 
 Si tienes alguna consulta para la corrección del ejercicio, mi mail es: elena.duran.llanos@gmail.com. No dudes en ponerte en contacto conmigo tanto por correo electrónico como por Slack.
 
-Mientras tanto, traslado nuestra agenda de reuniones al día 5 de noviembre a las 11:30, en la sala principal, para comentar todos los aspectos del ejercicio que consideres necesario.
+Para comentar todos los aspectos del ejercicio que consideres necesario, te recuerdo que tenemos una reunión el día 5 de noviembre a las 11:30, en la sala principal
 
